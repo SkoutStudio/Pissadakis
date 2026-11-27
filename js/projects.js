@@ -1,15 +1,44 @@
 /*
- * Λίστα έργων.
- * Βάλτε τις φωτογραφίες στο φάκελο assets/projects/ και γράψτε το όνομα του αρχείου στο "src".
- * Όσο το "src" είναι κενό, εμφανίζεται placeholder.
+ * Έργα — οι φωτογραφίες είναι στο assets/projects/.
+ * featured: true  → εμφανίζεται στο 3D τούνελ (με αυτή τη σειρά)
+ * cat             → μία από τις κατηγορίες του CATEGORIES
  */
-window.PROJECTS = [
-  { src: "", title: "Έργο 01", place: "Τοποθεσία", year: "2026" },
-  { src: "", title: "Έργο 02", place: "Τοποθεσία", year: "2026" },
-  { src: "", title: "Έργο 03", place: "Τοποθεσία", year: "2025" },
-  { src: "", title: "Έργο 04", place: "Τοποθεσία", year: "2025" },
-  { src: "", title: "Έργο 05", place: "Τοποθεσία", year: "2025" },
-  { src: "", title: "Έργο 06", place: "Τοποθεσία", year: "2024" },
-  { src: "", title: "Έργο 07", place: "Τοποθεσία", year: "2024" },
-  { src: "", title: "Έργο 08", place: "Τοποθεσία", year: "2024" }
+window.CATEGORIES = [
+  { id: "vafes", label: "Χρωματισμοί", text: "Εξωτερικοί & εσωτερικοί χρωματισμοί, δίχρωμες προσόψεις, εποξειδικά δάπεδα.", cover: "mezoneta-dyo-chromata-2.webp" },
+  { id: "gypso", label: "Γυψοσανίδες", text: "Συνθέσεις, ράφια, κουτελα, σκάλες και καμπύλες κατασκευές από γυψοσανίδα.", cover: "goniaio-syntheto-2.webp" },
+  { id: "led", label: "Κρυφός φωτισμός", text: "Ψευδοροφές με κρυφό φωτισμό LED, ταινίες και spot.", cover: "led-ypnodomatio.webp" },
+  { id: "prosopsi", label: "Προσόψεις & Επενδύσεις", text: "Τσιμεντοσανίδες, θερμοπροσόψεις και επενδύσεις καταστημάτων.", cover: "electronet-1.webp" },
+  { id: "deco", label: "Διακοσμητικά", text: "Stucco veneziano και ειδικά διακοσμητικά τελειώματα.", cover: "stucco-veneziano-tzaki.webp" }
 ];
+
+window.PROJECTS = [
+  { src: "refill-aerolimenas.webp", title: "Refill — Αεροδρόμιο Μυτιλήνης", place: "Μυτιλήνη", cat: "gypso", featured: true },
+  { src: "mezoneta-dyo-chromata-1.webp", title: "Δίχρωμη μεζονέτα", place: "Λέσβος", cat: "vafes", featured: true },
+  { src: "electronet-1.webp", title: "Electronet Προδρόμου", place: "Μυτιλήνη", cat: "prosopsi", featured: true },
+  { src: "led-ypnodomatio.webp", title: "Κρυφός φωτισμός υπνοδωματίου", place: "Μυτιλήνη", cat: "led", featured: true },
+  { src: "goniaio-syntheto-2.webp", title: "Γωνιακή σύνθεση με LED", place: "Μυτιλήνη", cat: "gypso", featured: true },
+  { src: "neoklassiko-mytilini.webp", title: "Νεοκλασικό", place: "Μυτιλήνη", cat: "vafes", featured: true },
+  { src: "kryfos-fotismos-neoklassiko.webp", title: "Πέτρα & κρυφός φωτισμός", place: "Μυτιλήνη", cat: "led", featured: true },
+  { src: "ophthalmologiki-larsos.webp", title: "Οφθαλμολογική κλινική", place: "Μυτιλήνη", cat: "vafes", featured: true },
+
+  { src: "mezoneta-dyo-chromata-2.webp", title: "Δίχρωμη μεζονέτα", place: "Λέσβος", cat: "vafes" },
+  { src: "mezoneta-dyo-chromata-3.webp", title: "Δίχρωμη μεζονέτα", place: "Λέσβος", cat: "vafes" },
+  { src: "exoterikos-choros-mytilini.webp", title: "Εξωτερικός χρωματισμός", place: "Μυτιλήνη", cat: "vafes" },
+  { src: "polykatoikia-exoteriko.webp", title: "Πολυκατοικία", place: "Μυτιλήνη", cat: "vafes" },
+  { src: "epoxeidiko-dapedo.webp", title: "Εποξειδικό δάπεδο", place: "Μυτιλήνη", cat: "vafes" },
+  { src: "electronet-2.webp", title: "Electronet Προδρόμου", place: "Μυτιλήνη", cat: "prosopsi" },
+  { src: "electronet-3.webp", title: "Electronet — σε εξέλιξη", place: "Μυτιλήνη", cat: "prosopsi" },
+  { src: "thermoprosopsi-mezoneta.webp", title: "Θερμοπρόσοψη", place: "Λέσβος", cat: "prosopsi" },
+  { src: "thermoprosopsi-gypsosanides.webp", title: "Θερμοπρόσοψη & γυψοσανίδες", place: "Λέσβος", cat: "prosopsi" },
+  { src: "prosopsi-after.webp", title: "Πρόσοψη με τσιμεντοσανίδα", place: "Μυτιλήνη", cat: "prosopsi" },
+  { src: "goniaio-syntheto-1.webp", title: "Γωνιακή σύνθεση — σκελετός", place: "Μυτιλήνη", cat: "gypso" },
+  { src: "syntheto-saloni.webp", title: "Σύνθεση σαλονιού", place: "Μυτιλήνη", cat: "gypso" },
+  { src: "skala-gypsosanida.webp", title: "Σκάλα με γυψοσανίδα", place: "Μυτιλήνη", cat: "gypso" },
+  { src: "stucco-veneziano-tzaki.webp", title: "Stucco veneziano σε τζάκι", place: "Μυτιλήνη", cat: "deco" }
+];
+
+window.BEFORE_AFTER = {
+  before: "prosopsi-before.webp",
+  after: "prosopsi-after.webp",
+  title: "Πρόσοψη κτιρίου με τσιμεντοσανίδα"
+};

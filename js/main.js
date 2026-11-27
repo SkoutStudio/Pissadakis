@@ -260,7 +260,10 @@ function heroTimeline() {
 /* =========================================================
  * 3. PROJECTS — 3D fly-through tunnel + grid
  * ======================================================= */
-const projects = window.PROJECTS || [];
+const allProjects = window.PROJECTS || [];
+const projects = allProjects.filter((p) => p.featured);
+const cats = window.CATEGORIES || [];
+const catLabel = (id) => (cats.find((c) => c.id === id) || {}).label || "";
 const pad = (n) => String(n).padStart(2, "0");
 
 function media(p, i) {
@@ -281,7 +284,7 @@ function buildProjects() {
   const cards = projects.map((p, i) => {
     const fig = document.createElement("figure");
     fig.className = "card3d";
-    fig.innerHTML = `${media(p, i)}<figcaption><strong>${p.title}</strong><span>${p.place} · ${p.year}</span></figcaption>`;
+    fig.innerHTML = `${media(p, i)}<figcaption><strong>${p.title}</strong><span>${catLabel(p.cat)} · ${p.place}</span></figcaption>`;
     const side = i % 2 ? 1 : -1;
     const x = isMobile ? side * 30 : side * Math.min(innerWidth * 0.17, 260);
     const y = (i % 3 - 1) * 40;
@@ -290,10 +293,14 @@ function buildProjects() {
     gsap.set(fig, { x, y, z, rotationY: -side * 14 });
     fig.addEventListener("click", () => openLightbox(p));
     world.appendChild(fig);
+    return fig;
+  });
 
+  allProjects.forEach((p, i) => {
     const th = document.createElement("figure");
     th.className = "thumb";
-    th.innerHTML = `${media(p, i)}<figcaption>${p.title}</figcaption>`;
+    th.dataset.cat = p.cat;
+    th.innerHTML = `${media(p, i)}<figcaption><small>${catLabel(p.cat)}</small>${p.title}</figcaption>`;
     th.addEventListener("click", () => openLightbox(p));
     th.addEventListener("pointermove", (e) => {
       const r = th.getBoundingClientRect();
@@ -303,8 +310,11 @@ function buildProjects() {
     });
     th.addEventListener("pointerleave", () => (th.style.transform = ""));
     grid.appendChild(th);
-    return fig;
   });
+
+  buildFilters();
+  buildServices();
+  buildBeforeAfter();
 
   const now = document.getElementById("projNow");
   const bar = document.getElementById("projBar");
@@ -349,12 +359,84 @@ function buildProjects() {
   });
 }
 
+/* ---------- gallery filters ---------- */
+function buildFilters() {
+  const wrap = document.getElementById("filters");
+  const opts = [{ id: "all", label: "Όλα" }, ...cats];
+  wrap.innerHTML = opts.map((c) => `<button data-cat="${c.id}" class="${c.id === "all" ? "is-on" : ""}">${c.label}</button>`).join("");
+  wrap.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    filterGallery(b.dataset.cat);
+  });
+}
+function filterGallery(cat) {
+  document.querySelectorAll("#filters button").forEach((x) => x.classList.toggle("is-on", x.dataset.cat === cat));
+  const shown = [];
+  document.querySelectorAll(".thumb").forEach((t) => {
+    const on = cat === "all" || t.dataset.cat === cat;
+    t.classList.toggle("is-hidden", !on);
+    if (on) shown.push(t);
+  });
+  gsap.fromTo(shown, { opacity: 0, y: 40, rotationX: -20 }, { opacity: 1, y: 0, rotationX: 0, stagger: 0.04, duration: 0.6, ease: "power3.out" });
+  ScrollTrigger.refresh();
+}
+
+/* ---------- services ---------- */
+function buildServices() {
+  const list = document.getElementById("services-list");
+  list.innerHTML = cats.map((c, i) => `
+    <article class="service" data-cat="${c.id}">
+      <img src="assets/projects/${c.cover}" alt="${c.label}" loading="lazy" />
+      <b>${pad(i + 1)}</b><h3>${c.label}</h3><p>${c.text}</p>
+    </article>`).join("");
+  list.querySelectorAll(".service").forEach((el) => {
+    el.addEventListener("click", () => {
+      filterGallery(el.dataset.cat);
+      document.getElementById("gallery").scrollIntoView({ behavior: "smooth" });
+    });
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(800px) rotateY(${px * 12}deg) rotateX(${-py * 12}deg)`;
+    });
+    el.addEventListener("pointerleave", () => (el.style.transform = ""));
+  });
+  gsap.from(".service", {
+    y: 120, rotationY: -35, opacity: 0, stagger: 0.12, duration: 1.1, ease: "power3.out",
+    transformPerspective: 900,
+    scrollTrigger: { trigger: "#services-list", start: "top 85%" },
+  });
+}
+
+/* ---------- before / after ---------- */
+function buildBeforeAfter() {
+  const ba = window.BEFORE_AFTER;
+  if (!ba) return document.getElementById("before-after").remove();
+  document.getElementById("baTitle").textContent = ba.title;
+  document.getElementById("baBefore").src = `assets/projects/${ba.before}`;
+  document.getElementById("baAfter").src = `assets/projects/${ba.after}`;
+  const frame = document.getElementById("ba");
+  const range = document.getElementById("baRange");
+  const set = (v) => frame.style.setProperty("--pos", `${v}%`);
+  range.addEventListener("input", () => set(range.value));
+  // auto-sweep once when it scrolls into view
+  const o = { v: 85 };
+  gsap.to(o, {
+    v: 50, duration: 1.6, ease: "power3.inOut", onUpdate: () => { set(o.v); range.value = o.v; },
+    scrollTrigger: { trigger: frame, start: "top 70%" },
+  });
+  gsap.from(frame, { rotationX: 25, y: 80, opacity: 0, transformPerspective: 1000, duration: 1.2, ease: "power3.out",
+    scrollTrigger: { trigger: frame, start: "top 85%" } });
+}
+
 /* ---------- lightbox ---------- */
 const lb = document.getElementById("lightbox");
 function openLightbox(p) {
   if (!p.src) return;
   lb.querySelector("img").src = `assets/projects/${p.src}`;
-  lb.querySelector("p").textContent = `${p.title} — ${p.place} · ${p.year}`;
+  lb.querySelector("p").textContent = `${p.title} — ${catLabel(p.cat)} · ${p.place}`;
   lb.hidden = false;
 }
 lb.addEventListener("click", (e) => {

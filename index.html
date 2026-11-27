@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pissadakis P.P. — Μάστορας</title>
-  <meta name="description" content="Πισσαδάκης P.P. — δουλειά με μεράκι. Δείτε τα έργα μας." />
+  <title>Pissadakis P.P. — Χρωματισμοί & Γυψοσανίδες, Μυτιλήνη</title>
+  <meta name="description" content="Πισσαδάκης P.P. — χρωματισμοί, γυψοσανίδες, κρυφός φωτισμός LED, προσόψεις και διακοσμητικά στη Μυτιλήνη και τη Λέσβο." />
   <meta name="theme-color" content="#c4000f" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,6 +22,7 @@
     <a href="#top" class="nav__brand"><img src="assets/logo.png" alt="Pissadakis P.P." /></a>
     <nav>
       <a href="#projects">Έργα</a>
+      <a href="#services" class="nav__hide">Υπηρεσίες</a>
       <a href="#contact" class="nav__cta">Επικοινωνία</a>
     </nav>
   </header>
@@ -44,12 +45,12 @@
         </h1>
 
         <div class="hero__copy hero__copy--left" id="copyLeft">
-          <span class="kicker">Ο μάστορας</span>
-          <p>Δουλειά με χέρια,<br />μεράκι και υπογραφή.</p>
+          <span class="kicker">Μυτιλήνη · Λέσβος</span>
+          <p>Χρωματισμοί, γυψοσανίδες<br />και κρυφός φωτισμός.</p>
         </div>
         <div class="hero__copy hero__copy--right" id="copyRight">
           <span class="kicker">P.P.</span>
-          <p>Κάθε έργο<br />με το όνομά μας πάνω του.</p>
+          <p>Κάθε έργο<br />με την υπογραφή μας.</p>
         </div>
 
         <div class="hero__scroll" id="scrollHint">
@@ -74,9 +75,30 @@
       </div>
     </section>
 
+    <!-- SERVICES -->
+    <section class="services" id="services">
+      <span class="kicker">Τι κάνουμε</span>
+      <h2 class="section__title">Υπηρεσίες</h2>
+      <div class="services__list" id="services-list"></div>
+    </section>
+
+    <!-- BEFORE / AFTER -->
+    <section class="ba" id="before-after">
+      <span class="kicker">Πριν & μετά</span>
+      <h2 class="section__title" id="baTitle"></h2>
+      <div class="ba__frame" id="ba">
+        <img class="ba__after" id="baAfter" alt="Μετά" />
+        <div class="ba__before" id="baBeforeWrap"><img id="baBefore" alt="Πριν" /></div>
+        <div class="ba__handle" id="baHandle"><span>‹ ›</span></div>
+        <b class="ba__tag ba__tag--l">Πριν</b><b class="ba__tag ba__tag--r">Μετά</b>
+        <input type="range" min="0" max="100" value="50" id="baRange" aria-label="Σύγκριση πριν και μετά" />
+      </div>
+    </section>
+
     <!-- GRID of all projects -->
     <section class="gallery" id="gallery">
-      <h2 class="gallery__title">Όλα τα έργα</h2>
+      <h2 class="section__title">Όλα τα έργα</h2>
+      <div class="filters" id="filters"></div>
       <div class="gallery__grid" id="grid"></div>
     </section>
 
