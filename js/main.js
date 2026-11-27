@@ -213,7 +213,7 @@ function buildSteps() {
   const cats = window.CATEGORIES || [];
   const wrap = document.getElementById("steps");
   wrap.innerHTML = cats.map((c, i) => `
-    <article class="step">
+    <article class="step ${i % 2 ? "step--left" : ""}">
       <div class="step__body">
         <span class="step__num">${String(i + 1).padStart(2, "0")} / ${String(cats.length).padStart(2, "0")}</span>
         <h2 class="step__title">${c.label}</h2>
@@ -279,22 +279,28 @@ function heroTimeline() {
 
   steps.forEach((el, i) => {
     const t0 = STEP_START + i * STEP_LEN;
-    const body = el.querySelector(".step__body");
+    const body = el.querySelectorAll(".step__body > *");
     const img = el.querySelector(".step__img");
     const dir = i % 2 ? -1 : 1;
 
     tl.set(el, { opacity: 1 }, t0);
     tl.fromTo(body, { opacity: 0, y: 70, rotationX: -35, transformPerspective: 800 },
-      { opacity: 1, y: 0, rotationX: 0, duration: 0.8, ease: "power3.out" }, t0);
-    tl.fromTo(img, { opacity: 0, x: 90, rotationY: -60, scale: 0.8, transformPerspective: 800 },
+      { opacity: 1, y: 0, rotationX: 0, duration: 0.8, stagger: 0.08, ease: "power3.out" }, t0);
+    const side = i % 2 ? -1 : 1; // 1 = panel on the right, -1 = panel on the left
+    tl.fromTo(img, { opacity: 0, x: 90 * side, rotationY: -60 * side, scale: 0.8, transformPerspective: 800 },
       { opacity: 1, x: 0, rotationY: 0, scale: 1, duration: 0.9, ease: "power3.out" }, t0 + 0.15);
 
     // logo turns to a new angle and catches the light for each category
-    tl.to(S, { rotY: Math.PI * 2 + dir * 0.55, rotX: -0.12 * dir, duration: 1, ease: "power2.inOut" }, t0);
+    // logo swaps to the opposite side of the panel and turns towards it
+    tl.to(S, {
+      x: () => (isMobile ? 0 : -side * viewSize().visW * 0.2),
+      rotY: Math.PI * 2 + side * 0.55, rotX: -0.12 * dir,
+      duration: 1, ease: "power2.inOut",
+    }, t0 - 0.3);
     tl.fromTo(S, { shine: -0.5 }, { shine: 1.5, duration: 1.4, immediateRender: false }, t0 + 0.2);
 
     tl.to(body, { opacity: 0, y: -60, duration: 0.7, ease: "power2.in" }, t0 + STEP_LEN - 0.75);
-    tl.to(img, { opacity: 0, x: -60, rotationY: 40, duration: 0.7, ease: "power2.in" }, t0 + STEP_LEN - 0.75);
+    tl.to(img, { opacity: 0, x: -60 * side, rotationY: 40 * side, duration: 0.7, ease: "power2.in" }, t0 + STEP_LEN - 0.75);
     tl.set(el, { opacity: 0 }, t0 + STEP_LEN - 0.02);
   });
 
