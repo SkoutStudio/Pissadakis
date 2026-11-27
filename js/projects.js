@@ -4,11 +4,11 @@
  * cat             → μία από τις κατηγορίες του CATEGORIES
  */
 window.CATEGORIES = [
-  { id: "vafes", label: "Χρωματισμοί", text: "Εξωτερικοί & εσωτερικοί χρωματισμοί, δίχρωμες προσόψεις, εποξειδικά δάπεδα.", cover: "mezoneta-dyo-chromata-2.webp" },
-  { id: "gypso", label: "Γυψοσανίδες", text: "Συνθέσεις, ράφια, κουτελα, σκάλες και καμπύλες κατασκευές από γυψοσανίδα.", cover: "goniaio-syntheto-2.webp" },
-  { id: "led", label: "Κρυφός φωτισμός", text: "Ψευδοροφές με κρυφό φωτισμό LED, ταινίες και spot.", cover: "led-ypnodomatio.webp" },
-  { id: "prosopsi", label: "Προσόψεις & Επενδύσεις", text: "Τσιμεντοσανίδες, θερμοπροσόψεις και επενδύσεις καταστημάτων.", cover: "electronet-1.webp" },
-  { id: "deco", label: "Διακοσμητικά", text: "Stucco veneziano και ειδικά διακοσμητικά τελειώματα.", cover: "stucco-veneziano-tzaki.webp" }
+  { id: "vafes", label: "Ελαιοχρωματισμοί", text: "Εξωτερικοί & εσωτερικοί χρωματισμοί, δίχρωμες προσόψεις, εποξειδικά δάπεδα.", cover: "mezoneta-dyo-chromata-1.webp", coverTitle: "Δίχρωμη μεζονέτα · Λέσβος" },
+  { id: "gypso", label: "Γυψοσανίδες", text: "Συνθέσεις, ράφια, κουτελα, σκάλες και καμπύλες κατασκευές από γυψοσανίδα.", cover: "goniaio-syntheto-2.webp", coverTitle: "Γωνιακή σύνθεση με LED · Μυτιλήνη" },
+  { id: "led", label: "Κρυφός φωτισμός", text: "Ψευδοροφές με κρυφό φωτισμό LED, ταινίες και spot.", cover: "led-ypnodomatio.webp", coverTitle: "Κρυφός φωτισμός υπνοδωματίου" },
+  { id: "prosopsi", label: "Προσόψεις & Επενδύσεις", text: "Τσιμεντοσανίδες, θερμοπροσόψεις και επενδύσεις καταστημάτων.", cover: "electronet-1.webp", coverTitle: "Electronet Προδρόμου · Μυτιλήνη" },
+  { id: "deco", label: "Διακοσμητικά", text: "Stucco veneziano και ειδικά διακοσμητικά τελειώματα.", cover: "stucco-veneziano-tzaki.webp", coverTitle: "Stucco veneziano σε τζάκι" }
 ];
 
 window.PROJECTS = [

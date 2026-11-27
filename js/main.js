@@ -204,9 +204,35 @@ function tick() {
 /* =========================================================
  * 2. HERO SCROLL TIMELINE
  * ======================================================= */
+function viewSize() {
+  const visH = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  return { visH, visW: visH * camera.aspect };
+}
+
+function buildSteps() {
+  const cats = window.CATEGORIES || [];
+  const wrap = document.getElementById("steps");
+  wrap.innerHTML = cats.map((c, i) => `
+    <article class="step">
+      <div class="step__body">
+        <span class="step__num">${String(i + 1).padStart(2, "0")} / ${String(cats.length).padStart(2, "0")}</span>
+        <h2 class="step__title">${c.label}</h2>
+        <p class="step__text">${c.text}</p>
+      </div>
+      <figure class="step__img"><img src="assets/projects/${c.cover}" alt="${c.label}" /></figure>
+      ${c.coverTitle ? `<p class="step__cap">${c.coverTitle}</p>` : ""}
+    </article>`).join("");
+  document.getElementById("stepDots").innerHTML = cats.map(() => "<i></i>").join("");
+  return gsap.utils.toArray(".step");
+}
+
 function heroTimeline() {
   const letters = gsap.utils.toArray("#heroWord span");
-  const flash = document.getElementById("flash");
+  const steps = buildSteps();
+  const dots = gsap.utils.toArray("#stepDots i");
+
+  const STEP_START = 3.6;
+  const STEP_LEN = 2.6;
 
   const tl = gsap.timeline({
     defaults: { ease: "none" },
@@ -214,10 +240,12 @@ function heroTimeline() {
       trigger: "#hero",
       start: "top top",
       end: "bottom bottom",
-      scrub: 1,
-      onToggle: (self) => {
-        heroActive = self.isActive || self.progress < 1;
-        canvas.style.visibility = heroActive ? "visible" : "hidden";
+      scrub: 1.2,
+      invalidateOnRefresh: true,
+      onToggle: (self) => { heroActive = self.isActive || self.progress < 1; },
+      onUpdate: () => {
+        const k = Math.floor((tl.time() - STEP_START) / STEP_LEN);
+        dots.forEach((d, i) => d.classList.toggle("is-on", i === k));
       },
     },
   });
@@ -238,23 +266,45 @@ function heroTimeline() {
     }, 0);
   });
   tl.to(S, { rotY: Math.PI * 2, scale: 1.15, duration: 3, ease: "power1.inOut" }, 0);
-  tl.to(S, { shine: 1.5, duration: 2 }, 1.5);
+  tl.to(S, { shine: 1.5, duration: 2 }, 1.2);
 
-  // Act 2 — three-quarter turn to show the thickness, copy reveals
-  tl.to(S, { rotY: Math.PI * 2 + 0.75, rotX: -0.25, x: isMobile ? 0 : 0.9, duration: 2, ease: "power2.inOut" }, 3);
-  tl.fromTo("#copyLeft", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1 }, 3.4);
-  tl.fromTo("#copyRight", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 1 }, 3.8);
-  tl.to(S, { shine: -0.5, duration: 0.01 }, 4.9);
-  tl.to(S, { rotY: Math.PI * 2 - 0.75, x: isMobile ? 0 : -0.9, rotZ: 0.08, duration: 2, ease: "power2.inOut" }, 5);
-  tl.to(S, { shine: 1.5, duration: 1.5 }, 5.5);
-  tl.to(["#copyLeft", "#copyRight"], { opacity: 0, y: (i) => (i ? -40 : 40), duration: 0.8 }, 6.6);
+  // Act 2 — logo steps aside, one category per scroll step
+  tl.to(S, {
+    x: () => (isMobile ? 0 : -viewSize().visW * 0.2),
+    y: () => (isMobile ? viewSize().visH * 0.2 : 0),
+    scale: isMobile ? 0.72 : 0.92,
+    duration: 1, ease: "power2.inOut",
+  }, 3);
+  tl.to("#stepDots", { opacity: 1, duration: 0.4 }, STEP_START - 0.3);
 
-  // Act 3 — face the camera, then fly straight through it
-  tl.to(S, { rotY: Math.PI * 4, rotX: 0, rotZ: 0, x: 0, duration: 1.5, ease: "power2.inOut" }, 7);
-  tl.to(S, { z: 7.4, warp: 1, duration: 2, ease: "power3.in" }, 8.3);
-  tl.to(".hero__word", { opacity: 0, duration: 0.5 }, 8.3);
-  tl.to(flash, { opacity: 1, duration: 0.35 }, 9.9);
-  tl.to(flash, { opacity: 0, duration: 0.6 }, 10.3);
+  steps.forEach((el, i) => {
+    const t0 = STEP_START + i * STEP_LEN;
+    const body = el.querySelector(".step__body");
+    const img = el.querySelector(".step__img");
+    const dir = i % 2 ? -1 : 1;
+
+    tl.set(el, { opacity: 1 }, t0);
+    tl.fromTo(body, { opacity: 0, y: 70, rotationX: -35, transformPerspective: 800 },
+      { opacity: 1, y: 0, rotationX: 0, duration: 0.8, ease: "power3.out" }, t0);
+    tl.fromTo(img, { opacity: 0, x: 90, rotationY: -60, scale: 0.8, transformPerspective: 800 },
+      { opacity: 1, x: 0, rotationY: 0, scale: 1, duration: 0.9, ease: "power3.out" }, t0 + 0.15);
+
+    // logo turns to a new angle and catches the light for each category
+    tl.to(S, { rotY: Math.PI * 2 + dir * 0.55, rotX: -0.12 * dir, duration: 1, ease: "power2.inOut" }, t0);
+    tl.fromTo(S, { shine: -0.5 }, { shine: 1.5, duration: 1.4, immediateRender: false }, t0 + 0.2);
+
+    tl.to(body, { opacity: 0, y: -60, duration: 0.7, ease: "power2.in" }, t0 + STEP_LEN - 0.75);
+    tl.to(img, { opacity: 0, x: -60, rotationY: 40, duration: 0.7, ease: "power2.in" }, t0 + STEP_LEN - 0.75);
+    tl.set(el, { opacity: 0 }, t0 + STEP_LEN - 0.02);
+  });
+
+  // Act 3 — face the camera, glide forward and melt into the next section
+  const END = STEP_START + steps.length * STEP_LEN;
+  tl.to("#stepDots", { opacity: 0, duration: 0.4 }, END - 0.4);
+  tl.to(S, { rotY: Math.PI * 4, rotX: 0, rotZ: 0, x: 0, y: 0, scale: 1.1, duration: 1.4, ease: "power2.inOut" }, END);
+  tl.to(".hero__word", { opacity: 0, duration: 0.5 }, END);
+  tl.to(S, { z: 5.6, warp: 1, duration: 2.6, ease: "power2.in" }, END + 1.2);
+  tl.to("#heroFade", { opacity: 1, duration: 1.8, ease: "power1.inOut" }, END + 2.0);
 }
 
 /* =========================================================

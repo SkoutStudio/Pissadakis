@@ -27,9 +27,6 @@
     </nav>
   </header>
 
-  <!-- 3D canvas: fixed behind the hero while it is pinned -->
-  <canvas id="stage" aria-hidden="true"></canvas>
-  <div class="flash" id="flash"></div>
 
   <main id="top">
     <!-- HERO -->
@@ -44,14 +41,15 @@
           <span style="--i:0">P</span><span style="--i:1">I</span><span style="--i:2">S</span><span style="--i:3">S</span><span style="--i:4">A</span><span style="--i:5">D</span><span style="--i:6">A</span><span style="--i:7">K</span><span style="--i:8">I</span><span style="--i:9">S</span>
         </h1>
 
-        <div class="hero__copy hero__copy--left" id="copyLeft">
-          <span class="kicker">Μυτιλήνη · Λέσβος</span>
-          <p>Χρωματισμοί, γυψοσανίδες<br />και κρυφός φωτισμός.</p>
-        </div>
-        <div class="hero__copy hero__copy--right" id="copyRight">
-          <span class="kicker">P.P.</span>
-          <p>Κάθε έργο<br />με την υπογραφή μας.</p>
-        </div>
+        <!-- 3D logo canvas lives inside the pinned hero -->
+        <canvas id="stage" aria-hidden="true"></canvas>
+
+        <!-- one category per scroll step -->
+        <div class="steps" id="steps"></div>
+        <div class="steps__dots" id="stepDots"></div>
+
+        <!-- soft fade into the next section -->
+        <div class="hero__fade" id="heroFade"></div>
 
         <div class="hero__scroll" id="scrollHint">
           <span>Scroll</span>
